@@ -1,0 +1,19 @@
+{
+  "name": "yale-discord-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricYale/YaleDiscord.git"
+  },
+  "author": "Eric Yoon",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/EricYale/YaleDiscord/issues"
+  },
+  "homepage": "https://github.com/EricYale/YaleDiscord#readme",
+  "description": ""
+}
