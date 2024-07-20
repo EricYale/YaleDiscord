@@ -1,5 +1,5 @@
 const { initializeApp, applicationDefault } = require("firebase-admin/app");
-const { getFirestore, FieldValue } = require("firebase-admin/firestore");
+const { getFirestore, FieldValue, FirebaseFirestoreError } = require("firebase-admin/firestore");
 
 class DataManager {
     constructor() {
@@ -21,9 +21,12 @@ class DataManager {
                 email: null,
                 college: null,
                 major: null,
+                image: null,
+                year: null,
                 terms: null, // Example: "FA2023", "SP2024", etc. Array of objects containing course enrollment data
             });
         } catch(e) {
+            if(e.code === 6) return; // Document already exists
             console.error(e);
         }
     }
@@ -40,6 +43,31 @@ class DataManager {
             return null;
         }
         return token;
+    }
+
+    getDiscordIdFromLinkToken = async (token) => {
+        const snapshot = await this.firestore.collection("users").where("linkToken", "==", token).get();
+        if(snapshot.empty) return null;
+        return snapshot.docs[0].id;
+    }
+
+    updateWithInitialData = async (discordId, yaliesData) => {
+        try {
+            await this.firestore.collection("users").doc(discordId).update({
+                yaliesDataLastUpdated: FieldValue.serverTimestamp(),
+                netId: yaliesData.netid,
+                firstName: yaliesData.first_name,
+                lastName: yaliesData.last_name,
+                email: yaliesData.email,
+                college: yaliesData.college,
+                major: yaliesData.major,
+                image: yaliesData.image,
+                year: yaliesData.year,
+            });
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to update user data");
+        }
     }
 }
 

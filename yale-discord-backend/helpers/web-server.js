@@ -8,8 +8,11 @@ const path = require("path");
 const PORT = 80;
 
 class WebServer {
-    constructor() {
-        this.cas = new CasRoute();
+    constructor(discordBot, dataManager, yaliesManager) {
+        this.discordBot = discordBot;
+        this.dataManager = dataManager;
+        this.yaliesManager = yaliesManager;
+        this.cas = new CasRoute(discordBot, dataManager, yaliesManager);
         this.initializeExpress();
         this.initializePassport();
         this.initializeCas();

@@ -23,6 +23,7 @@
     "express-session": "^1.18.0",
     "firebase-admin": "^12.2.0",
     "passport": "^0.7.0",
-    "passport-cas": "github:coursetable/passport-cas"
+    "passport-cas": "github:coursetable/passport-cas",
+    "yalies": "^0.1.0"
   }
 }

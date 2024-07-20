@@ -1,0 +1,12 @@
+@use "../../shared";
+
+#error_page {
+    @include shared.rails();
+    text-align: center;
+    h1, h2 {
+        margin-bottom: 30px;
+    }
+    h2 {
+        font-weight: normal;
+    }
+}

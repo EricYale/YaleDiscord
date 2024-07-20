@@ -1,0 +1,24 @@
+@use "../../shared";
+
+#link_page {
+    @include shared.rails();
+    text-align: center;
+
+    #pre_header {
+        text-transform: uppercase;
+    }
+    h1 {
+        text-transform: uppercase;
+        margin: 40px 0;
+        font-size: 70px;
+        @include shared.gradient-text();
+    }
+    h2 {
+        margin: 20px 0;
+        font-size: 30px;
+    }
+}
+
+.divider {
+    margin-top: 70px;
+}

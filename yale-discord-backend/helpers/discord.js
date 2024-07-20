@@ -36,6 +36,16 @@ class DiscordBot {
             await this.onGuildMemberAdd(message.member);
         }
     }
+
+    onMemberLinked = async (discordId, yaliesData) => {
+        const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID);
+        if(!guild) throw new Error("No guild found");
+        const member = await guild.members.fetch(discordId);
+        if(!member) throw new Error("No member found");
+
+        member.roles.add(process.env.DISCORD_LINKED_ROLE_ID);
+        member.setNickname(`${yaliesData.first_name} ${yaliesData.last_name} '${yaliesData.year.toString().substring(2)}`);
+    }
 }
 
 module.exports = DiscordBot;

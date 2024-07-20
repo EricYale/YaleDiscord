@@ -1,0 +1,16 @@
+@use "../../shared";
+
+#edit_profile_page {
+    @include shared.rails();
+    text-align: center;
+
+    h1 {
+        margin: 40px 0;
+        font-size: 70px;
+        @include shared.gradient-text();
+    }
+}
+
+.divider {
+    margin-top: 70px;
+}
