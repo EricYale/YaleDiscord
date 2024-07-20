@@ -44,8 +44,8 @@ class DiscordBot {
         const member = await guild.members.fetch(discordId);
         if(!member) throw new Error("No member found");
 
-        member.roles.add(process.env.DISCORD_LINKED_ROLE_ID);
-        member.setNickname(`${yaliesData.first_name} ${yaliesData.last_name} '${yaliesData.year.toString().substring(2)}`);
+        await member.roles.add(process.env.DISCORD_LINKED_ROLE_ID);
+        await member.setNickname(`${yaliesData.first_name} ${yaliesData.last_name} '${yaliesData.year.toString().substring(2)}`);
     }
 
     createRoleAndChannelForCourseIfNotExist = async (courseCode) => {

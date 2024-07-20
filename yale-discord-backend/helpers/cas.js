@@ -57,7 +57,7 @@ class CasRoute {
         }
 
         try {
-            this.discordBot.onMemberLinked(discordId, yaliesData);
+            await this.discordBot.onMemberLinked(discordId, yaliesData);
         } catch(e) {
             console.error(e);
             return res.redirect("/error/discord_error");
