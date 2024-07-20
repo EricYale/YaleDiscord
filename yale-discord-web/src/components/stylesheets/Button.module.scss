@@ -2,7 +2,7 @@
 
 .button {
     font-family: "Lexend", "Arial", sans-serif;
-    background-color: #222222;
+    background-color: darken(shared.$gradient-to, 30%);
     padding: 10px 14px;
     font-size: 15px;
     text-transform: uppercase;

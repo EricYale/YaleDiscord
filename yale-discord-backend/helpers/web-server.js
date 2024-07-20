@@ -8,14 +8,15 @@ const path = require("path");
 const PORT = 80;
 
 class WebServer {
-    constructor(discordBot, dataManager, yaliesManager) {
+    constructor(discordBot, dataManager, yaliesManager, coursetableManager) {
         this.discordBot = discordBot;
         this.dataManager = dataManager;
         this.yaliesManager = yaliesManager;
+        this.coursetableManager = coursetableManager;
         this.cas = new CasRoute(discordBot, dataManager, yaliesManager);
         this.initializeExpress();
         this.initializePassport();
-        this.initializeCas();
+        this.initializeRouter();
         this.initializeWebServer();
         this.serve();
     }
@@ -38,9 +39,10 @@ class WebServer {
         this.app.use(passport.session());
     }
 
-    initializeCas = () => {
+    initializeRouter = () => {
         const apiRouter = express.Router();
         apiRouter.get("/cas", this.cas.casLogin);
+        apiRouter.get("/courses", this.getCourseData);
         this.app.use("/api", apiRouter);
     }
 
@@ -55,6 +57,12 @@ class WebServer {
         this.app.listen(PORT, () => {
             console.log(`App running on port ${PORT}`);
         });
+    }
+
+    getCourseData = (req, res, next) => {
+        const data = this.coursetableManager.getCourseData();
+        if(!data) return next(new Error("Course data hasn't been fetched yet."));
+        res.json(data);
     }
 }
 

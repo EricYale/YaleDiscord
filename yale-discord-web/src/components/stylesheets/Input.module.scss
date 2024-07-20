@@ -1,0 +1,48 @@
+@use "../../shared";
+
+input {
+    background-color: lighten(shared.$bg-color, 10%);
+    font-family: "Lexend", "Arial", sans-serif;
+    border: 2px shared.$gradient-to solid;
+    padding: 7px;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: border-color .3s;
+    caret-color: shared.$gradient-to;
+    font-weight: bold;
+    box-sizing: border-box;
+    color: shared.$fg_color;
+
+    &:focus {
+        outline: none;
+        border-color: shared.$gradient-to;
+        transition: border-color .3s;
+    }
+    &.large {
+        padding: 10px;
+        font-size: 15px;
+        height: 50px;
+        @include shared.mobile(){
+            height:40px;
+        }
+    }
+    &.jumbo {
+        padding: 20px;
+        font-size: 30px;
+        border-radius: 8px;
+        border-width: 5px;
+        height: 80px;
+        width: 100%;
+        @include shared.mobile(){
+            padding: 7px;
+            font-size: 13px;
+            border-radius: 4px;
+            border-width: 2px;
+            height: 40px;
+        }
+    }
+
+    &::placeholder {
+        color: darken(shared.$fg-color, 40%);
+    }
+}

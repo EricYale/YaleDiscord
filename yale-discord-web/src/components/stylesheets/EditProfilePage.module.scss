@@ -14,3 +14,41 @@
 .divider {
     margin-top: 70px;
 }
+.divider_small {
+    margin-top: 40px;
+}
+
+.course_listing {
+    padding: 15px;
+    border: 1px shared.$gradient-from solid;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color .2s;
+    text-align: left;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    &:hover {
+        background-color: lighten(shared.$bg-color, 10%);
+    }
+
+    .code {
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .title {
+        font-size: 13px;
+        color: darken(shared.$fg-color, 20%);
+    }
+    .bullet {
+        margin: 0 10px;
+    }
+    .icon {
+        margin-left: auto;
+    }
+}

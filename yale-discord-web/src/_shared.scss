@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
-$background-color: #0f0026;
+$bg-color: #0f0026;
 $gradient-from: #00e6ff;
 $gradient-to: #ff00e3;
 $fg-color: #ffffff;
@@ -9,7 +9,7 @@ $SMALL_DESKTOP_WIDTH: 1200px;
 $MOBILE_WIDTH: 800px;
 
 body {
-    background-color: $background-color;
+    background-color: $bg-color;
     color: $fg-color;
     font-family: "Lexend", sans-serif;
 }
