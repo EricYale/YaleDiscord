@@ -17,14 +17,14 @@ class WebServer {
         this.serve();
     }
 
-    initializeExpress() {
+    initializeExpress = () => {
         this.app = express();
         this.app.set("trust proxy", 1);
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
     }
 
-    initializePassport() {
+    initializePassport = () => {
         this.app.use(session({
             secret: process.env.SESSION_SECRET,
             resave: false,
@@ -35,20 +35,20 @@ class WebServer {
         this.app.use(passport.session());
     }
 
-    initializeCas() {
+    initializeCas = () => {
         const apiRouter = express.Router();
         apiRouter.get("/cas", this.cas.casLogin);
         this.app.use("/api", apiRouter);
     }
 
-    initializeWebServer() {
+    initializeWebServer = () => {
         this.app.use(express.static("build"));
         this.app.all("*", (req, res) => { // Redirect other routes to single page web app
             res.sendFile(path.resolve("build", "index.html"));
         });
     }
 
-    serve() {
+    serve = () => {
         this.app.listen(PORT, () => {
             console.log(`App running on port ${PORT}`);
         });
