@@ -43,6 +43,7 @@ class WebServer {
         const apiRouter = express.Router();
         apiRouter.get("/cas", this.cas.casLogin);
         apiRouter.get("/courses", this.getCourseData);
+        apiRouter.post("/updateSeason", this.updateSeasonForUser);
         this.app.use("/api", apiRouter);
     }
 
@@ -63,6 +64,24 @@ class WebServer {
         const data = this.coursetableManager.getCourseData();
         if(!data) return next(new Error("Course data hasn't been fetched yet."));
         res.json(data);
+    }
+
+    updateSeasonForUser = async (req, res, next) => {
+        const token = req.body.token;
+        if(!token) return res.status(400).send("invalid_data");
+        const discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
+        if(!discordId) return res.status(400).send("invalid_token");
+
+        const courses = req.body.courses;
+        if(!courses || !Array.isArray(courses)) return res.status(400).send("invalid_data");
+
+        try {
+            await this.dataManager.updateSeasonForUser(discordId, courses);
+        } catch(e) {
+            return res.status(400).send("database_error");
+        }
+
+        res.status(200).end();
     }
 }
 

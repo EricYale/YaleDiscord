@@ -69,6 +69,19 @@ class DataManager {
             throw new Error("Failed to update user data");
         }
     }
+
+    updateSeasonForUser = async (discordId, courses) => {
+        try {
+            await this.firestore.collection("users").doc(discordId).update({
+                [`terms.${process.env.CURRENT_SEASON}`]: {
+                    courses,
+                },
+            });
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to update user data");
+        }
+    }
 }
 
 module.exports = DataManager;

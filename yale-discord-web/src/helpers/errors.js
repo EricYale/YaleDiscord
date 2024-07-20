@@ -19,6 +19,10 @@ const ERRORS = {
         title: "Error Saving Data",
         body: "Sorry, there was an error saving your data. Please contact a moderator for help.",
     },
+    invalid_data: {
+        title: "Error",
+        body: "Invalid data. Please contact a moderator for help.",
+    },
 };
 
 export default ERRORS;
