@@ -18,8 +18,8 @@ class DiscordBot {
 
     setupCallbacks = () => {
         this.client.once(Events.ClientReady, this.onClientReady);
-        this.client.once(Events.GuildMemberAdd, this.onGuildMemberAdd);
-        this.client.once(Events.MessageCreate, this.onMessageCreate);
+        this.client.on(Events.GuildMemberAdd, this.onGuildMemberAdd);
+        this.client.on(Events.MessageCreate, this.onMessageCreate);
     }
 
     onClientReady = (readyClient) => {
@@ -35,9 +35,6 @@ class DiscordBot {
         if(message.author.bot) return;
         if(message.content === "!link") {
             await this.onGuildMemberAdd(message.member);
-        }
-        if(message.content === "323") {
-            await this.createRoleAndChannelForCourseIfNotExist("CPSC 323");
         }
     }
 
