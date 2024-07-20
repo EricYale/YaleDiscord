@@ -72,13 +72,22 @@ class WebServer {
         const discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
         if(!discordId) return res.status(400).send("invalid_token");
 
-        const courses = req.body.courses;
-        if(!courses || !Array.isArray(courses)) return res.status(400).send("invalid_data");
+        const courseCodes = req.body.courses;
+        if(!courseCodes || !Array.isArray(courseCodes)) return res.status(400).send("invalid_data");
 
         try {
-            await this.dataManager.updateSeasonForUser(discordId, courses);
+            await this.dataManager.updateSeasonForUser(discordId, courseCodes);
         } catch(e) {
             return res.status(400).send("database_error");
+        }
+
+        try {
+            await this.discordBot.removeUserFromAllCourses(discordId);
+            for(const courseCode of courseCodes) {
+                await this.discordBot.registerUserForCourse(discordId, courseCode);
+            }
+        } catch(e) {
+            return res.status(400).send("discord_error");
         }
 
         res.status(200).end();

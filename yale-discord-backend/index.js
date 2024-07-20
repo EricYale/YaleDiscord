@@ -8,5 +8,5 @@ const CoursetableManager = require("./helpers/coursetableManager");
 const dataManager = new DataManager();
 const yaliesManager = new YaliesManager();
 const coursetableManager = new CoursetableManager();
-const discordBot = new DiscordBot(dataManager);
+const discordBot = new DiscordBot(dataManager, coursetableManager);
 const webServer = new WebServer(discordBot, dataManager, yaliesManager, coursetableManager);

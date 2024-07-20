@@ -82,6 +82,39 @@ class DataManager {
             throw new Error("Failed to update user data");
         }
     }
+
+    getCourseInfo = async (courseCode) => {
+        try {
+            const snapshot = await this.firestore
+                .collection("seasons")
+                .doc(process.env.CURRENT_SEASON)
+                .collection("courses")
+                .doc(courseCode)
+                .get();
+            if(!snapshot.exists) return null;
+            return snapshot.data();
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to get course info");
+        }
+    }
+
+    updateCourseInfo = async (courseCode, discordChannelId, discordRoleId) => {
+        try {
+            await this.firestore
+                .collection("seasons")
+                .doc(process.env.CURRENT_SEASON)
+                .collection("courses")
+                .doc(courseCode)
+                .set({
+                    discordChannelId,
+                    discordRoleId,
+                });
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to update course info");
+        }
+    }
 }
 
 module.exports = DataManager;

@@ -35,6 +35,12 @@ class CoursetableManager {
     getCourseData = () => {
         return this.listingsCache;
     }
+
+    getCourseInfoForCourse = (courseCode) => {
+        const data = this.listingsCache.find((item) => item.course_code === courseCode);
+        if(!data) return null;
+        return data;
+    }
 }
 
 module.exports = CoursetableManager;
