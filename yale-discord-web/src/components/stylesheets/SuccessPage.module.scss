@@ -4,12 +4,4 @@
     @include shared.rails();
     text-align: center;
 
-    h1 {
-        margin: 40px 0;
-        font-size: 70px;
-        @include shared.gradient-text();
-    }
-    p {
-        margin: 30px 0;
-    }
 }

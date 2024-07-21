@@ -6,7 +6,7 @@ $gradient-to: #ff00e3;
 $fg-color: #ffffff;
 
 $SMALL_DESKTOP_WIDTH: 1200px;
-$MOBILE_WIDTH: 800px;
+$MOBILE_WIDTH: 1000px;
 
 body {
     background-color: $bg-color;
@@ -39,5 +39,31 @@ body {
     }
     @include small_desktop(){
         padding: 50px 15vw;
+    }
+}
+
+h1 {
+    margin: 40px 0;
+    font-size: 70px;
+    @include gradient-text();
+    @include mobile() {
+        font-size: 90px;
+        margin: 60px 0;
+    }
+}
+h2 {
+    margin: 20px 0;
+    font-size: 30px;
+    @include mobile() {
+        font-size: 40px;
+        margin: 30px 0;
+    }
+}
+p {
+    margin: 30px 0;
+    font-size: 13px;
+    @include mobile() {
+        font-size: 15px;
+        margin: 40px 0;
     }
 }

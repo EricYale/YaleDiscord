@@ -2,7 +2,7 @@ import css from "./stylesheets/Button.module.scss";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Button({ onClick, large, jumbo, primary, secondary, icon, iconRight, disabled, children }) {
+function Button({ onClick, large, primary, secondary, icon, iconRight, disabled, children }) {
     const iconElem = (
         <FontAwesomeIcon icon={icon} className={css.icon} style={{
             paddingRight: iconRight || !children ? 0 : "10px",
@@ -12,7 +12,7 @@ function Button({ onClick, large, jumbo, primary, secondary, icon, iconRight, di
     const iconOnly = icon && !children;
     return (
         <button
-            className={`${css.button} ${large && css.large} ${jumbo && css.jumbo} ${primary && css.primary} ${secondary && css.secondary} ${disabled && css.disabled} ${iconOnly && css.icon_only}`}
+            className={`${css.button} ${large && css.large} ${primary && css.primary} ${secondary && css.secondary} ${disabled && css.disabled} ${iconOnly && css.icon_only}`}
             onClick={disabled ? null : onClick}
         >
             {!iconRight && iconElem}
