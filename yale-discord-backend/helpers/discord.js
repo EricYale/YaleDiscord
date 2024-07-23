@@ -101,7 +101,11 @@ class DiscordBot {
         }
 
         await member.roles.add(process.env.DISCORD_LINKED_ROLE_ID);
-        await member.setNickname(`${yaliesData.first_name} ${yaliesData.last_name} '${yaliesData.year.toString().substring(2)}`);
+        let nickname = "";
+        if(yaliesData.first_name) nickname += yaliesData.first_name + " ";
+        if(yaliesData.last_name) nickname += yaliesData.last_name + " ";
+        if(yaliesData.year) nickname += `'${yaliesData.year.toString().substring(2)}`;
+        if(nickname.length > 0) await member.setNickname(nickname);
     }
 
     createRoleAndChannelForCourseIfNotExist = async (courseCode) => {
