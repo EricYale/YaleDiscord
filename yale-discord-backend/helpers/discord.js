@@ -27,14 +27,44 @@ class DiscordBot {
     }
 
     onGuildMemberAdd = async (member) => {
+        await this.createLinkToken(member);
+    }
+    
+    createLinkToken = async (member) => {
         const linkToken = await this.dataManager.createLinkToken(member.id);
         member.send(`### Welcome to AKW Online! 💻😊\nTo start chatting, link your NetID by following this link:\n${process.env.WEB_URL}/link/${linkToken}`);
+        return linkToken;
     }
 
     onMessageCreate = async (message) => {
         if(message.author.bot) return;
-        if(message.content === "!link") {
-            await this.onGuildMemberAdd(message.member);
+        if(!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+
+        if(message.content.startsWith("!link")) {
+            if(message.mentions.members.size === 0) {
+                await this.createLinkToken(message.member);
+                return;
+            }
+            const sendTo = message.mentions.members.first();
+            const token = await this.createLinkToken(sendTo);
+            await message.member.send(`Link token created for ${sendTo.user.username}.\n${process.env.WEB_URL}/link/${token}`);
+            await message.channel.send(`I've created a URL for ${sendTo.user.username}. It's been sent to their DMs.`);
+            return;
+        }
+        
+        if(message.content.startsWith("!cleanup")) {
+            if(message.content.indexOf(" ") === -1) {
+                await message.channel.send("Please provide a course code to clean up.");
+                return;
+            }
+
+            const course = message.content.substring(message.content.indexOf(" ") + 1);
+            if(await this.deleteCourseChannelAndRole(course)) {
+                await message.channel.send(`Course channel and role for \`${course}\` have been deleted. Database has been updated.`);
+            } else {
+                await message.channel.send(`Could not delete \`${course}\`. Are you sure that course code exists?`);
+            }
+            return;
         }
     }
 
@@ -105,7 +135,12 @@ class DiscordBot {
         const member = await guild.members.fetch(discordId);
         if(!member) throw new Error("No member found");
 
-        const classRoles = member.roles.cache.filter((role) => role.name.startsWith("Student ::"));
+        const classRoles = member.roles.cache.filter(
+            (role) =>
+                role.name.startsWith("Student ::") &&
+                role.name.endsWith(`:: ${process.env.CURRENT_SEASON}`)
+            );
+
         for(let role of classRoles.values()) {
             await member.roles.remove(role);
         }
@@ -121,6 +156,24 @@ class DiscordBot {
         const role = await guild.roles.fetch(discordRoleId);
         if(!role) throw new Error("No role found");
         member.roles.add(role);
+    }
+
+    deleteCourseChannelAndRole = async (courseCode) => {
+        const discordCourseData = await this.dataManager.getCourseInfo(courseCode);
+        if(!discordCourseData) return false;
+
+        const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID);
+        if(!guild) throw new Error("No guild found");
+
+        const channel = await guild.channels.fetch(discordCourseData.discordChannelId);
+        if(channel) await channel.delete();
+
+        const role = await guild.roles.fetch(discordCourseData.discordRoleId);
+        if(role) await role.delete();
+
+        await this.dataManager.deleteCourseInfo(courseCode);
+
+        return true;
     }
 }
 

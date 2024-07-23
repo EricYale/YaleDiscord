@@ -115,6 +115,20 @@ class DataManager {
             throw new Error("Failed to update course info");
         }
     }
+
+    deleteCourseInfo = async (courseCode) => {
+        try {
+            await this.firestore
+                .collection("seasons")
+                .doc(process.env.CURRENT_SEASON)
+                .collection("courses")
+                .doc(courseCode)
+                .delete();
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to delete course info");
+        }
+    }
 }
 
 module.exports = DataManager;

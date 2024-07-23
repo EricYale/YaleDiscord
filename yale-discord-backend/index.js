@@ -1,5 +1,5 @@
 require("dotenv").config();
-const WebServer = require("./helpers/web-server");
+const WebServer = require("./helpers/webServer");
 const DiscordBot = require("./helpers/discord");
 const DataManager = require("./helpers/dataManager");
 const YaliesManager = require("./helpers/yaliesManager");

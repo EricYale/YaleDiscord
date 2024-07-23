@@ -74,6 +74,7 @@ class WebServer {
 
         const courseCodes = req.body.courses;
         if(!courseCodes || !Array.isArray(courseCodes)) return res.status(400).send("invalid_data");
+        if(courseCodes.length > 5) return res.status(400).send("invalid_data");
 
         try {
             await this.dataManager.updateSeasonForUser(discordId, courseCodes);
