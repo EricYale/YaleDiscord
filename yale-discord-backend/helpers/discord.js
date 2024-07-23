@@ -105,7 +105,13 @@ class DiscordBot {
         if(yaliesData.first_name) nickname += yaliesData.first_name + " ";
         if(yaliesData.last_name) nickname += yaliesData.last_name + " ";
         if(yaliesData.year) nickname += `'${yaliesData.year.toString().substring(2)}`;
-        if(nickname.length > 0) await member.setNickname(nickname);
+        if(nickname.length > 0) {
+            try {
+                await member.setNickname(nickname);
+            } catch(e) {
+                console.log(`Failed to set nickname for ${member.user.username}. Maybe they are an admin?`);
+            }
+        }
     }
 
     createRoleAndChannelForCourseIfNotExist = async (courseCode) => {
