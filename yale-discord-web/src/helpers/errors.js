@@ -23,6 +23,10 @@ const ERRORS = {
         title: "Error",
         body: "Invalid data. Please contact a moderator for help.",
     },
+    not_linked: {
+        title: "Error",
+        body: "Please link your account before choosing your courses.",
+    },
 };
 
 export default ERRORS;

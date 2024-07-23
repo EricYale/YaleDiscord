@@ -32,9 +32,9 @@ class DataManager {
     }
 
     createLinkToken = async (discordId) => {
-        await this.createDocIfNotExist(discordId);
         const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         try {
+            await this.createDocIfNotExist(discordId);
             await this.firestore.collection("users").doc(discordId).update({
                 linkToken: token,
             });
@@ -67,6 +67,17 @@ class DataManager {
         } catch(e) {
             console.error(e);
             throw new Error("Failed to update user data");
+        }
+    }
+
+    getUserData = async (discordId) => {
+        try {
+            const snapshot = await this.firestore.collection("users").doc(discordId).get();
+            if(!snapshot.exists) return null;
+            return snapshot.data();
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to get user data");
         }
     }
 

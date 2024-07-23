@@ -43,7 +43,13 @@ class CasRoute {
 
     onAuthSuccess = async (req, res, next, token, user) => {
         console.log(`Logged in ${user.netId} as ${token}`);
-        const discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
+        let discordId;
+        try {
+            discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
+        } catch(e) {
+            console.error(e);
+            return res.redirect("/error/database_error");
+        }
         if(!discordId) return res.redirect("/error/invalid_token");
 
         const yaliesData = await this.yaliesManager.getUserByNetId(user.netId);

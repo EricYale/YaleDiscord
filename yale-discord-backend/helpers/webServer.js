@@ -69,12 +69,25 @@ class WebServer {
     updateSeasonForUser = async (req, res, next) => {
         const token = req.body.token;
         if(!token) return res.status(400).send("invalid_data");
-        const discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
+        let discordId;
+        try {
+            discordId = await this.dataManager.getDiscordIdFromLinkToken(token);
+        } catch(e) {
+            return res.status(400).send("database_error");
+        }
         if(!discordId) return res.status(400).send("invalid_token");
 
         const courseCodes = req.body.courses;
         if(!courseCodes || !Array.isArray(courseCodes)) return res.status(400).send("invalid_data");
         if(courseCodes.length > 5) return res.status(400).send("invalid_data");
+
+        let userData;
+        try {
+            userData = await this.dataManager.getUserData(discordId);
+        } catch(e) {
+            return res.status(400).send("database_error");
+        }
+        if(!userData || !userData.yaliesDataLastUpdated) return res.status(400).send("not_linked");
 
         try {
             await this.dataManager.updateSeasonForUser(discordId, courseCodes);

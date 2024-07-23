@@ -31,7 +31,13 @@ class DiscordBot {
     }
     
     createLinkToken = async (member) => {
-        const linkToken = await this.dataManager.createLinkToken(member.id);
+        let linkToken;
+        try {
+            linkToken = await this.dataManager.createLinkToken(member.id);
+        } catch(e) {
+            console.error(e);
+            return;
+        }
         member.send(`### Welcome to AKW Online! 💻😊\nTo start chatting, link your NetID by following this link:\n${process.env.WEB_URL}/link/${linkToken}`);
         return linkToken;
     }
@@ -59,8 +65,22 @@ class DiscordBot {
             }
 
             const course = message.content.substring(message.content.indexOf(" ") + 1);
-            if(await this.deleteCourseChannelAndRole(course)) {
-                await message.channel.send(`Course channel and role for \`${course}\` have been deleted. Database has been updated.`);
+            let result;
+            try {
+                result = await this.deleteCourseChannelAndRole(course)
+            } catch(e) {
+                console.error(e);
+                await message.channel.send(`Could not delete \`${course}\`. An error occurred.`);
+                return;
+            }
+            if(result) {
+                try {
+                    await message.channel.send(`Course channel and role for \`${course}\` have been deleted. Database has been updated.`);
+                } catch(e) {
+                    // It's OK!
+                    // The user probably sent the command in the course channel, which has just been deleted.
+                    return;
+                }
             } else {
                 await message.channel.send(`Could not delete \`${course}\`. Are you sure that course code exists?`);
             }
@@ -70,16 +90,28 @@ class DiscordBot {
 
     onMemberLinked = async (discordId, yaliesData) => {
         const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID);
-        if(!guild) throw new Error("No guild found");
+        if(!guild) {
+            console.error("No guild found.");
+            return;
+        }
         const member = await guild.members.fetch(discordId);
-        if(!member) throw new Error("No member found");
+        if(!member) {
+            console.error("No member found.");
+            return;
+        }
 
         await member.roles.add(process.env.DISCORD_LINKED_ROLE_ID);
         await member.setNickname(`${yaliesData.first_name} ${yaliesData.last_name} '${yaliesData.year.toString().substring(2)}`);
     }
 
     createRoleAndChannelForCourseIfNotExist = async (courseCode) => {
-        const discordCourseData = await this.dataManager.getCourseInfo(courseCode);
+        let discordCourseData;
+        try {
+            discordCourseData = await this.dataManager.getCourseInfo(courseCode);
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to get course info");
+        }
         if(discordCourseData && discordCourseData.discordChannelId && discordCourseData.discordRoleId) {
             return discordCourseData;
         }
@@ -121,7 +153,12 @@ class DiscordBot {
 
         await channel.setTopic(`${courseCode} - ${courseInfo.course.title}`);
 
-        await this.dataManager.updateCourseInfo(courseCode, channel.id, role.id);
+        try {
+            await this.dataManager.updateCourseInfo(courseCode, channel.id, role.id);
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to update course info");
+        }
 
         return {
             discordChannelId: channel.id,
@@ -171,7 +208,12 @@ class DiscordBot {
         const role = await guild.roles.fetch(discordCourseData.discordRoleId);
         if(role) await role.delete();
 
-        await this.dataManager.deleteCourseInfo(courseCode);
+        try {
+            await this.dataManager.deleteCourseInfo(courseCode);
+        } catch(e) {
+            console.error(e);
+            throw new Error("Failed to delete course info");
+        }
 
         return true;
     }
